@@ -1,24 +1,24 @@
-import React, { useeffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { View, Text, Alert, ActivityIndicator } from 'react-native'
-import React from 'react'
+import Constants from 'expo-constants';
 import PageContainer from '../components/PageContainer'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SIZES, FONTS } from '../constants'
 import Button from '../components/Button'
 import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import * as Keychain from 'react-native-keychain';
 
-export default function welcome({ navigation }) {
+export default function welcome() {
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
-    const [appVersion, setAppVersion] = useState('1.0.0');
+    const [appVersion , setAppversion ] =useState(null);
 
     const CheckUserStatus = useCallback(async () => {
         setIsLoading(true);
         try {
-            const token = await AsyncStorage.getItem("token");
+            const token = await retrieveToken();
             if (!token) {
                 Alert.alert("You are not logged in");
             } else {
@@ -34,10 +34,10 @@ export default function welcome({ navigation }) {
 
     const CheckAppVersion = useCallback(async () => {
 
-       await axios.get('/api/Appversion')
+        await axios.post('/api/Appversion')
             .then(response => {
-                const currentVersion = response.data.version;
-                setAppVersion(currentVersion);
+                const message = response.data;
+                
 
             })
             .catch(error => {
@@ -47,9 +47,28 @@ export default function welcome({ navigation }) {
 
     }, []);
 
-    useeffect (()=> {
+    useEffect(() => {
+        const CurrentAppVersion = Constants.manifest.version;
+        setAppversion(CurrentAppVersion);
         CheckAppVersion();
     }, []);
+
+
+    const retrieveToken = async () => {
+        try {
+
+            const credentials = await Keychain.getGenericPassword();
+            if (credentials) {
+                return credentials.password;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    };
+
+
 
 
     return (
@@ -111,6 +130,16 @@ export default function welcome({ navigation }) {
                         >
                             {isLoading && <ActivityIndicator size="large" color="#00ff00" />}
                         </Button>
+
+                        <Text
+                            style={{
+                                ...FONTS.body3,
+                                marginVertical: 12,
+                            }}
+                        >
+                            {`version ${appVersion}`}
+                        </Text>
+
 
                     </View>
                 </View>
