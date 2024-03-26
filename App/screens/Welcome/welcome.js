@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { View, Text, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, ActivityIndicator } from 'react-native'
 import Constants from 'expo-constants';
 import PageContainer from '../components/PageContainer'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -9,24 +9,29 @@ import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import * as Keychain from 'react-native-keychain';
+import ErrorModal from "../../components/Modals/ErrorModal";
 
 export default function welcome() {
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
-    const [appVersion , setAppversion ] =useState(null);
+    const [appVersion, setAppversion] = useState(null);
+    const [errorModalOpen, setErrorModalOpen] = useState(false);
+    const [message , setMessage] =useState('')
 
     const CheckUserStatus = useCallback(async () => {
         setIsLoading(true);
         try {
             const token = await retrieveToken();
             if (!token) {
-                Alert.alert("You are not logged in");
+                setMessage("You are not logged in");
+                setErrorModalOpen(true);
             } else {
                 navigation.navigate("Home");
             }
         } catch (error) {
             console.error("Error fetching user status:", error);
-            Alert.alert("Something went wrong, try again later");
+            setMessage("Something went wrong, try again later");
+            setErrorModalOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -37,7 +42,9 @@ export default function welcome() {
         await axios.post('/api/Appversion')
             .then(response => {
                 const message = response.data;
-                
+                setMessage(message);
+                setErrorModalOpen(true);
+
 
             })
             .catch(error => {
@@ -140,7 +147,11 @@ export default function welcome() {
                             {`version ${appVersion}`}
                         </Text>
 
-
+                        <ErrorModal
+                            Message={message}
+                            isOpen={errorModalOpen}
+                            onClose={() => setErrorModalOpen(false)}
+                        />
                     </View>
                 </View>
             </PageContainer>
