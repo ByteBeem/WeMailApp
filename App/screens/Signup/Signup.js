@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import LottieView from 'lottie-react-native';
+import { SIZES , FONTS} from '../../constants'
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -16,7 +18,27 @@ const Signup = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <LottieView source={require("../../assets/json/aninSignup.json")}
+        autoPlay
+        loop
+        style={{
+          width: SIZES.width * 0.7,
+          height: SIZES.width * 0.7,
+          marginVertical: 48,
+        }}
+      />
+
+      <Text
+        style={{
+          ...(SIZES.width <= 360
+            ? { ...FONTS.h2 }
+            : { ...FONTS.h1 }),
+          textAlign: 'center',
+          marginHorizontal: SIZES.padding * 0.8,
+        }}
+      >
+        Open WeMail account
+      </Text>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -37,7 +59,7 @@ const Signup = () => {
         onChangeText={setPassword}
       />
       <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+        <Text style={styles.buttonText}>Create account</Text>
       </TouchableOpacity>
     </View>
   );

@@ -16,7 +16,7 @@ export default function welcome() {
     const navigation = useNavigation();
     const [appVersion, setAppversion] = useState(null);
     const [errorModalOpen, setErrorModalOpen] = useState(false);
-    const [message , setMessage] =useState('')
+    const [message, setMessage] = useState('')
 
     const CheckUserStatus = useCallback(async () => {
         setIsLoading(true);
@@ -44,14 +44,10 @@ export default function welcome() {
                 const message = response.data;
                 setMessage(message);
                 setErrorModalOpen(true);
-
-
             })
             .catch(error => {
                 console.error('Error fetching version information:', error);
             });
-
-
     }, []);
 
     useEffect(() => {
@@ -63,7 +59,6 @@ export default function welcome() {
 
     const retrieveToken = async () => {
         try {
-
             const credentials = await Keychain.getGenericPassword();
             if (credentials) {
                 return credentials.password;
@@ -75,85 +70,83 @@ export default function welcome() {
         }
     };
 
-
-
-
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <PageContainer>
-                <View
-                    style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        flexDirection: 'column',
-                        marginHorizontal: 22,
-                    }}
-                >
-
-                    <LottieView source={require("../../assets/json/animation.json")}
-                        autoPlay
-                        loop
+                {!errorModalOpen && (
+                    <View
                         style={{
-                            width: SIZES.width * 0.7,
-                            height: SIZES.width * 0.7,
-                            marginVertical: 48,
-                        }}
-                    />
-
-
-
-                    <Text
-                        style={{
-                            ...(SIZES.width <= 360
-                                ? { ...FONTS.h2 }
-                                : { ...FONTS.h1 }),
-                            textAlign: 'center',
-                            marginHorizontal: SIZES.padding * 0.8,
+                            flex: 1,
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexDirection: 'column',
+                            marginHorizontal: 22,
                         }}
                     >
-                        Connect easily with your family and friends over
-                        countries
-                    </Text>
 
-                    <View style={{ width: '100%', alignItems: 'center' }}>
-                        <Text
+                        <LottieView source={require("../../assets/json/animation.json")}
+                            autoPlay
+                            loop
                             style={{
-                                ...FONTS.body3,
-                                marginVertical: 12,
+                                width: SIZES.width * 0.7,
+                                height: SIZES.width * 0.7,
+                                marginVertical: 48,
                             }}
-                        >
-                            Terms and Privacy
-                        </Text>
-
-                        <Button
-                            title="launch WeMail"
-                            onPress={() => CheckUserStatus()}
-                            style={{
-                                width: '100%',
-                                paddingVertical: 12,
-                                marginBottom: 48,
-                            }}
-                        >
-                            {isLoading && <ActivityIndicator size="large" color="#00ff00" />}
-                        </Button>
-
-                        <Text
-                            style={{
-                                ...FONTS.body3,
-                                marginVertical: 12,
-                            }}
-                        >
-                            {`version ${appVersion}`}
-                        </Text>
-
-                        <ErrorModal
-                            Message={message}
-                            isOpen={errorModalOpen}
-                            onClose={() => setErrorModalOpen(false)}
                         />
+
+                        <Text
+                            style={{
+                                ...(SIZES.width <= 360
+                                    ? { ...FONTS.h2 }
+                                    : { ...FONTS.h1 }),
+                                textAlign: 'center',
+                                marginHorizontal: SIZES.padding * 0.8,
+                            }}
+                        >
+                            Connect easily with your family and friends over
+                            countries
+                        </Text>
+
+                        <View style={{ width: '100%', alignItems: 'center' }}>
+                            <Text
+                                style={{
+                                    ...FONTS.body3,
+                                    marginVertical: 12,
+                                }}
+                            >
+                                Terms and Privacy
+                            </Text>
+
+                            <Button
+                                title="launch WeMail"
+                                onPress={() => CheckUserStatus()}
+                                style={{
+                                    width: '100%',
+                                    paddingVertical: 12,
+                                    marginBottom: 48,
+                                }}
+                            >
+                                {isLoading && <ActivityIndicator size="large" color="#00ff00" />}
+                            </Button>
+
+                            <Text
+                                style={{
+                                    ...FONTS.body3,
+                                    marginVertical: 12,
+                                }}
+                            >
+                                {`version ${appVersion}`}
+                            </Text>
+                        </View>
                     </View>
-                </View>
+                )}
+                <ErrorModal
+                    message={message}
+                    isOpen={errorModalOpen}
+                    onClose={() => setErrorModalOpen(false)}
+                    onSignup={()=> navigation.navigate("Signup")}
+                    onLogin={()=> navigation.navigate("Login")}
+                />
             </PageContainer>
         </SafeAreaView>
     )

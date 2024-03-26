@@ -1,7 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { FONTS } from '../../constants'
 
-const ErrorModal = ({ Message, isOpen, onClose }) => {
+const ErrorModal = memo(({ message, isOpen, onClose, onLogin, onSignup }) => {
   return (
     isOpen && (
       <View style={styles.errorModalOverlay}>
@@ -9,23 +10,23 @@ const ErrorModal = ({ Message, isOpen, onClose }) => {
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
-          <Text style={styles.errorMessage}>{Message}</Text>
-          <TouchableOpacity style={styles.okButton} onPress={onClose}>
-            <Text style={styles.okButtonText}>OK</Text>
+          <Text style={styles.errorMessage}>{message}</Text>
+          <TouchableOpacity style={styles.button} onPress={onLogin}>
+            <Text style={styles.buttonText}>Log in</Text>
+          </TouchableOpacity>
+          <Text style={styles.orText}>OR</Text>
+          <TouchableOpacity style={styles.button} onPress={onSignup}>
+            <Text style={styles.buttonText}>Open account</Text>
           </TouchableOpacity>
         </View>
       </View>
     )
   );
-};
+});
 
 const styles = StyleSheet.create({
   errorModalOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0, 0, 0, 0.897)",
     justifyContent: "center",
     alignItems: "center",
@@ -43,14 +44,14 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 10,
   },
-  okButton: {
+  button: {
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: "#007bff",
     borderRadius: 5,
     marginTop: 10,
   },
-  okButtonText: {
+  buttonText: {
     color: "white",
     fontSize: 16,
     textAlign: "center",
@@ -69,6 +70,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 10,
     textAlign: "center",
+  },
+  orText: {
+    ...FONTS.body4,
+    color: '#999', 
+    textAlign: 'center',
   },
 });
 
