@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native'
 import Constants from 'expo-constants';
-import PageContainer from '../components/PageContainer'
+import PageContainer from '../../components/PageContainer'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { SIZES, FONTS } from '../constants'
-import Button from '../components/Button'
+import { SIZES, FONTS } from '../../constants'
+import Button from '../../components/Button'
 import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
