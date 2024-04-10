@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.themxolisi.App"
     },
     "web": {
       "favicon": "./assets/logo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "681b7518-d0ac-4b6d-a19f-4b09eda0b020"
+      }
     }
   }
 }
